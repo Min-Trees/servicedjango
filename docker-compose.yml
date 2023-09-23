@@ -1,0 +1,24 @@
+version: '3.10.5'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  db:
+    image: user:latest
+    restart: always
+    environment:
+      POSTGRES_DB: tdmu_root
+      POSTGRES_USER : admin
+      POSTGRES_PASSWORD : Ifx8Qb0D477qLVg3IoVEv71fSVeH8ga1
+    volumes:
+      - .dbdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
