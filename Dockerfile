@@ -13,7 +13,7 @@ COPY requirements.txt .
 
 # Sao chép toàn bộ mã nguồn vào /app trong container
 COPY . .
-
+RUN pip install --upgrade pip
 # Cài đặt các phụ thuộc sản xuất từ tệp requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
