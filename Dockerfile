@@ -1,20 +1,17 @@
-FROM python:3.10-slim
+FROM python:3.11.4-slim-bullseye
+WORKDIR /app
 
-# Đặt biến môi trường để đầu ra Python không bị đệm
-ENV PYTHONUNBUFFERED True
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
-# Đặt thư mục làm việc của container là /app
-ENV APP_HOME /app
-WORKDIR $APP_HOME
+# install system dependencies
+RUN apt-get update
 
-# Sao chép tệp requirements.txt từ thư mục gốc của dự án vào /app trong container
-COPY requirements.txt .
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt /app/
+RUN pip install -r requirements.txt
 
-# Sao chép toàn bộ mã nguồn vào /app trong container
 COPY . /app
 
-# Cài đặt các phụ thuộc sản xuất từ tệp requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Chạy ứng dụng bằng gunicorn
-CMD ["gunicorn", "project_microservice.wsgi:application", "--bind", "0.0.0.0:8000"]
+ENTRYPOINT [ "gunicorn", "project_microservice.wsgi"]
