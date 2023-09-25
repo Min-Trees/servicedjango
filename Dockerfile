@@ -1,8 +1,8 @@
-FROM python:3.9
+FROM python:3.10-slim
 ENV PYTHONUNBUFFERED 1
-WORKDIR /app
-COPY requirements.txt /app/requirements.txt
+WORKDIR /project_microservice
+COPY requirements.txt /project_microservice/requirements.txt
+COPY . /project_microservice
 RUN pip install -r requirements.txt
-COPY . /app
 RUN pip install gunicorn==20.1.0
-CMD ["gunicorn", "project_microservice.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "-b", ":8000", "--workers", "4", "--timeout", "60", "users:app"]
