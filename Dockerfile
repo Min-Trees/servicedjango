@@ -1,17 +1,9 @@
-FROM python:3.11.4-slim-bullseye
+FROM python:3.9
+ENV PYTHONNUNBUFFERED 1
 WORKDIR /app
-
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-
-# install system dependencies
-RUN apt-get update
-
-# install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /app/
-RUN pip install -r requirements.txt
-
+COPY requirements.txt /app/requirements.txt
+RUN  pip install --upgrade pip
+RUN pip install  -r requirements.txt
 COPY . /app
 
-ENTRYPOINT [ "gunicorn", "project_microservice.wsgi"]
+CMD python manage.py runserver 0.0.0.0:8000

@@ -1,0 +1,6 @@
+name: my-django-app
+services:
+  - name: web
+    type: python
+    build:
+      dockerfile: Dockerfile

@@ -14,11 +14,11 @@ services:
     image: user:latest
     restart: always
     environment:
-      POSTGRES_DB: tdmu_root
-      POSTGRES_USER : admin
-      POSTGRES_PASSWORD : Ifx8Qb0D477qLVg3IoVEv71fSVeH8ga1
+      POSTGRES_DB: raiway
+      POSTGRES_USER : postgres
+      POSTGRES_PASSWORD : ZmsQVysqLScgGCQ6WVfd'
     volumes:
       - .dbdata:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 7805:7805
 

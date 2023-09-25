@@ -3,12 +3,13 @@ from django.shortcuts import render
 from django.views import View
 from .models import Account, AccountProfile
 from .serializers import AccountSerializer, ProfileSerializer
-from rest_framework import viewsets, generics
+from rest_framework import  generics
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 from django import http
+import requests
 # Create your views here.
 
 '''class UserView(viewsets.ModelViewSet):
@@ -19,16 +20,16 @@ class UserViewDetail(generics.RetrieveAPIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     #search user by userId
-    lookup_field = 'userID'
+    lookup_field = 'id'
 class deleteUserView(generics.DestroyAPIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     #search user by userId
-    lookup_field = 'userID'
+    lookup_field = 'id'
 class Profile(generics.RetrieveAPIView):
     queryset = AccountProfile.objects.all()
     serializer_class = ProfileSerializer
-    lookup_field = 'userID' 
+    lookup_field = 'id' 
 
 @csrf_exempt
 def getUser(request):
