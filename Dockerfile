@@ -1,4 +1,3 @@
-# Sử dụng hình ảnh Python 3.10-slim làm hình ảnh cơ sở
 FROM python:3.10-slim
 
 # Đặt biến môi trường để đầu ra Python không bị đệm
@@ -12,8 +11,8 @@ WORKDIR $APP_HOME
 COPY requirements.txt .
 
 # Sao chép toàn bộ mã nguồn vào /app trong container
-COPY . .
-RUN pip install --upgrade pip
+COPY . /app
+
 # Cài đặt các phụ thuộc sản xuất từ tệp requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
