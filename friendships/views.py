@@ -41,7 +41,7 @@ def ListFriends(request, user_id):
     unique_friends = list(set(all_friends))
     friends.friends.set(unique_friends)
 
-    friends_data = [{'id': friend.id, 'name': friend.name} for friend in unique_friends]
+    friends_data = [{'id': friend.id, 'name': friend.username} for friend in unique_friends]
     
     return JsonResponse({'friends': friends_data})
 
@@ -56,6 +56,6 @@ def Friends_list(request, user_id):
         friend_accounts = []
 
     # Xây dựng danh sách bạn bè dưới dạng JSON
-    friends_data = [{'id': friend.id, 'name': friend.name} for friend in friend_accounts]
+    friends_data = [{'id': friend.id, 'name': friend.username} for friend in friend_accounts]
     
     return JsonResponse({'friends': friends_data})

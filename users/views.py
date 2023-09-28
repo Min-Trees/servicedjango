@@ -20,7 +20,7 @@ class UserViewDetail(generics.RetrieveAPIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     #search user by userId
-    lookup_field = 'id'
+    lookup_field = 'email'
 class deleteUserView(generics.DestroyAPIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
