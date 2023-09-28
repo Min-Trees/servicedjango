@@ -17,7 +17,7 @@ class Account(models.Model):
     ]
     
     id = models.CharField(primary_key=True,default=uuid.uuid4, max_length=36)
-    name = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=200) # service friends
     #friendships = models.ManyToManyField(FriendShip, blank=True)

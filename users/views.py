@@ -37,7 +37,7 @@ def getUser(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
             
-            name = data.get('name')
+            username = data.get('username')
             password = data.get('password')
             email = data.get('email')
             gender = data.get('gender')
@@ -45,11 +45,11 @@ def getUser(request):
             role = data.get('role')
             
             # Kiểm tra nếu có dữ liệu bị thiếu
-            if None in [id, name, password, email, gender, birthday, role]:
+            if None in [id, username, password, email, gender, birthday, role]:
                 response_data = {
                     'status': HTTPStatus.BAD_REQUEST,
                     'mess': '',
-                    'serviceName': 'UsersService',
+                    'serviceName': 'USERSERVICE',
                     'body': {
                         'data': None,
                         'error': 'Data is incomplete or null.'
@@ -57,17 +57,17 @@ def getUser(request):
                 }
                 return JsonResponse(response_data, status=HTTPStatus.BAD_REQUEST)
 
-            user = Account( name=name, password=password, email=email, gender=gender, birthday=birthday, role=role)
+            user = Account( username=username, password=password, email=email, gender=gender, birthday=birthday, role=role)
             user.save()
             response_data = {
                 'status': HTTPStatus.CREATED,
                 'message': 'Created',
-                'serviceName': 'UsersService',
+                'serviceName': 'USERSERVICE',
                 'body': {
                     'data': {
                         'message': 'Data received and saved successfully',
                         'id': user.id,
-                        'name': user.name,
+                        'name': user.username,
                         'email': user.email,
                         'gender': user.gender,
                         'birthday': user.birthday,
