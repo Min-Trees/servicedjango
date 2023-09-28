@@ -37,7 +37,6 @@ def getUser(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
             
-            id = data.get('id')
             name = data.get('name')
             password = data.get('password')
             email = data.get('email')
@@ -58,7 +57,7 @@ def getUser(request):
                 }
                 return JsonResponse(response_data, status=HTTPStatus.BAD_REQUEST)
 
-            user = Account(id=id, name=name, password=password, email=email, gender=gender, birthday=birthday, role=role)
+            user = Account( name=name, password=password, email=email, gender=gender, birthday=birthday, role=role)
             user.save()
             response_data = {
                 'status': HTTPStatus.CREATED,
@@ -105,3 +104,4 @@ def getProfile(requests):
 
     else:
         return JsonResponse({'error' : 'Unable to fetch user data from Profile Service'})
+

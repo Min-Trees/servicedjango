@@ -1,67 +1,61 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from users.models import Account
+from rest_framework import generics, status
+from .serializers import RequestFriendShipSerializer
+from .models import Request, Friends
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+class SendRequest(generics.CreateAPIView):
+    serializer_class = RequestFriendShipSerializer
 
-from friendships.serializers import FriendShipSerializers
-from users.models import Account
-from .models import FriendRequest, FriendShips, RequestFriendShip
-from django.contrib.auth.models import User
-from rest_framework.views import APIView
-class CreateFriendRequestView(APIView):
-    permission_classes = [IsAuthenticated]
+    def Create(self, request, *args, **kwargs):
+        to_user_id = self.kwargs['to_user_id']
+        to_user = get_object_or_404(Account, id = to_user)
 
-    def post(self, request, *args, **kwargs):
-        receiver_id = request.data.get('receiver_id')
-        receiver = Account.objects.get(id=receiver_id)
+        if request.user != to_user:
+            friend_request_exits = Request.objects.filter(
+                requester = request.user, receiver = to_user, accepted = False
+            ).exists()
 
-        FriendRequest.objects.create(
-            sender=request.user,
-            receiver=receiver,
-            status='pending',
-        )
-
-        return Response({'status': 'Friend request sent'}, status=201)
-
-'''class FriendsAndFriendRequestsView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        friends = Account.objects.filter(friends=request.user)
-        friend_requests = FriendRequest.objects.filter(sender=request.user)
-
-        return Response({
-            'friends': [friend.to_dict() for friend in friends],
-            'friend_requests': [friend_request.to_dict() for friend_request in friend_requests],
-        })'''
-
-@api_view(['GET'])
-def request_friend(request):
-    user = request.user
-    friends = RequestFriendShip.objects.filter()
-def get_friends(request):
-    user = request.user
-
-    friends = user.friends.all()
-    serializer = FriendShipSerializers(friends, many=True)
-    return JsonResponse(serializer.data, safe=False)
-
-class FriendsAndFriendRequestsView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        userID = request.GET.get('userID')
-
-        if not userID:
-            return Response({'error': 'userID is required'}, status=400)
-
-        friends = Account.objects.filter(friends=userID)
-        friend_requests = FriendRequest.objects.filter(sender=userID)
-
-        return Response({
-            'friends': [friend.to_dict() for friend in friends],
-            'friend_requests': [friend_request.to_dict() for friend_request in friend_requests],
-        })
+            if not friend_request_exits:
+                friend_request = Request(requester = request.user, receiver= to_user)
+                friend_request.save()
+                return Response({'message': 'Lời mời kết bạn đã được gửi'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({'message': 'Lời mời kết bạn đã tồn tại'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'message': 'Bạn không thể tự gửi lời mời kết bạn cho chính mình'}, status=status.HTTP_400_BAD_REQUEST)
+        
+def ListFriends(request, user_id):
+    user = get_object_or_404(Account, id=user_id)
     
+    sent_requests = Request.objects.filter(requester=user, status='accepted')
+    received_requests = Request.objects.filter(receiver=user, status='accepted')
+
+    friends_from_sent_requests = [request.receiver for request in sent_requests]
+    friends_from_received_requests = [request.requester for request in received_requests]
+    
+    all_friends = friends_from_sent_requests + friends_from_received_requests
+    friends, created = Friends.objects.get_or_create(user=user)
+    unique_friends = list(set(all_friends))
+    friends.friends.set(unique_friends)
+
+    friends_data = [{'id': friend.id, 'name': friend.name} for friend in unique_friends]
+    
+    return JsonResponse({'friends': friends_data})
+
+def Friends_list(request, user_id):
+    user = get_object_or_404(Account, id=user_id)
+    
+    # Lấy danh sách bạn bè của người dùng
+    try:
+        friends = Friends.objects.get(user=user)
+        friend_accounts = friends.friends.all()
+    except Friends.DoesNotExist:
+        friend_accounts = []
+
+    # Xây dựng danh sách bạn bè dưới dạng JSON
+    friends_data = [{'id': friend.id, 'name': friend.name} for friend in friend_accounts]
+    
+    return JsonResponse({'friends': friends_data})

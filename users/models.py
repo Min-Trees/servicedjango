@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import Permission
 import uuid
 from django.utils import timezone
+
 '''class FriendShip(models.Model):
     user1 = models.ForeignKey('Account', on_delete=models.CASCADE, related_name='user1_friendships')
     user2 = models.ForeignKey('Account', on_delete=models.CASCADE, related_name='user2_friendships')
@@ -18,9 +19,9 @@ class Account(models.Model):
     id = models.CharField(primary_key=True,default=uuid.uuid4, max_length=36)
     name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=200)
-    friends = models.ManyToManyField('Account', blank=True, related_name='friends_of') # service friends
+    password = models.CharField(max_length=200) # service friends
     #friendships = models.ManyToManyField(FriendShip, blank=True)
+    friends = models.ManyToManyField('self', blank=True, related_name='friends_of')
     role = models.CharField(max_length=100,default='NORMAL')
     birthday = models.CharField(max_length=200)
     gender = models.CharField(max_length=10,choices=GENDER_CHOICES)
@@ -32,4 +33,3 @@ class AccountProfile(models.Model):
     userID = models.OneToOneField(Account, on_delete=models.CASCADE, primary_key=True)
     userAvt = models.URLField(blank=True, null =True)
     userBackGround = models.URLField(blank=True, null=True)
-

@@ -10,3 +10,4 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountProfile
         fields = '__all__'
+    
