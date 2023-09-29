@@ -1,14 +1,11 @@
 from django.urls import path
-from .views import UserViewDetail, getUser,Profile, deleteUserView, getProfile
-import requests
+from .views import  getUser, getProfile, SearchUser, Delete_user, UpdateUser
 urlpatterns = [
     # return user
-    path('search/<str:email>',UserViewDetail.as_view(),name='user-detail'),
-    #http.... / api/detail/1
-    path('delete-user/<str:id>',deleteUserView.as_view(),name='delete-user'),
-    #get user from auth
     path('register',getUser,name='register'),
-    path('profile-user/<int:id>',Profile.as_view(), name='profile-user'),
+    path('search/',SearchUser,name='SearchUser'),
+    path('delete/<str:user_id>',Delete_user,name='delete-user'),
+    path('update/<str:user_id>', UpdateUser, name = 'update-user'),
+    #get user from auth
     path('getuser-profile', getProfile, name='getuser-profile'),
-
 ]

@@ -20,13 +20,11 @@ class Account(models.Model):
     username = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=200) # service friends
-    #friendships = models.ManyToManyField(FriendShip, blank=True)
-    friends = models.ManyToManyField('self', blank=True, related_name='friends_of')
     role = models.CharField(max_length=100,default='NORMAL')
     birthday = models.CharField(max_length=200)
     gender = models.CharField(max_length=10,choices=GENDER_CHOICES)
-    createdAt = models.DateField(default=timezone.now)
-    updateAt = models.DateField(default=timezone.now)
+    createdAt = models.DateField(auto_now_add=True)
+    updateAt = models.DateField(auto_now_add=True)
 
 class AccountProfile(models.Model):
     # khi xoa user thi xoa luon cau profile cua user
