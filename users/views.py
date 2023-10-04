@@ -137,23 +137,23 @@ def SearchUser(request):
                     }
         else:
             response_data = {
-                'status': HTTPStatus.INTERNAL_SERVER_ERROR,
-                'mess': 'internal server error',
-                'serviceName': 'USERSERVICE',
-                'body': {
-                    'error':'internal server error'
+                'status': HTTPStatus.NOT_FOUND,
+                'mess': 'User not found',
+                'body':{
+                    'error':'not found'
                 }
             }
         return JsonResponse(response_data, status=HTTPStatus.OK)
     except:
+
         response_data = {
-            'status': HTTPStatus.NOT_FOUND,
-            'mess': 'User not found',
-            'body':{
-                'error':'not found'
+            'status': HTTPStatus.INTERNAL_SERVER_ERROR,
+            'mess': 'internal server error',
+            'serviceName': 'USERSERVICE',
+            'body': {
+                'error':'internal server error'
             }
         }
-
     return JsonResponse(response_data, status=response_data['status'])
 
 @csrf_exempt
