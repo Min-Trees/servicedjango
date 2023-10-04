@@ -126,6 +126,7 @@ def SearchUser(request):
                                 'id': user.id,
                                 'name': user.username,
                                 'email': user.email,
+                                'password':user.password,
                                 'gender': user.gender,
                                 'birthday': user.birthday,
                                 'role': user.role,
