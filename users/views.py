@@ -71,7 +71,7 @@ def UpdateUser(request,user_id):
                 'message': 'Internal Server Error',
                 'serviceName': 'UsersService',
                 'body': {
-                    'data': None,
+                    'data': False,
                     'error': str(e)
                 }
             }
@@ -175,7 +175,7 @@ def getUser(request):
                     'mess': 'bad request',
                     'serviceName': 'USERSERVICE',
                     'body': {
-                        'data': 'NULL',
+                        'data': False,
                         'error': 'bad request'
                     }
                 }
@@ -212,7 +212,7 @@ def getUser(request):
                 'mess': 'Internal Server Error',
                 'serviceName': 'UsersService',
                 'body': {
-                    'data': 'NULL',
+                    'data': False,
                     'error': str(e)
                 }
             }
