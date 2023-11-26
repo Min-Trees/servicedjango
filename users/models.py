@@ -9,25 +9,32 @@ from django.utils import timezone
     status = models.CharField(max_length=10, default='pending')'''
 
 class Account(models.Model):
+    #gender_choice
     MALE = 'MALE'
     FEMALE = 'FEMALE'
     GENDER_CHOICES = [
         (MALE, 'MALE'),
         (FEMALE, 'FEMALE'),
     ]
-    
-    id = models.CharField(primary_key=True,default=uuid.uuid4, max_length=36)
+    STUDENT = 'STUDENT'
+    TEACHER = 'TEACHER'
+    OTHER = 'OTHER'
+    #type_role_choice
+    TYPE_ROLE = [
+        (STUDENT , 'STUDENT'),
+        (TEACHER , 'TEACHER'),
+        (OTHER , 'OTHER'),
+
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=200) # service friends
     role = models.CharField(max_length=100,default='NORMAL')
     birthday = models.CharField(max_length=200)
     gender = models.CharField(max_length=10,choices=GENDER_CHOICES)
+    type = models.CharField(max_length=10,choices=TYPE_ROLE,null=True)
+    department = models.CharField(max_length=100, null=True, default=None)
+    classroom = models.CharField(max_length=100, null=True, default=None)
     createdAt = models.DateField(auto_now_add=True)
     updateAt = models.DateField(auto_now_add=True)
-
-class AccountProfile(models.Model):
-    # khi xoa user thi xoa luon cau profile cua user
-    userID = models.OneToOneField(Account, on_delete=models.CASCADE, primary_key=True)
-    userAvt = models.URLField(blank=True, null =True)
-    userBackGround = models.URLField(blank=True, null=True)

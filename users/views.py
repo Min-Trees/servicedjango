@@ -2,8 +2,7 @@ from django.utils import timezone
 from http import HTTPStatus
 from django.shortcuts import get_object_or_404, render
 from django.views import View
-from .models import Account, AccountProfile
-from .serializers import AccountSerializer, ProfileSerializer
+from .models import Account
 from rest_framework import  generics
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -19,7 +18,7 @@ from users import models
 def UpdateUser(request,user_id):
     if request.method == 'PATCH':
         try:
-            user = get_object_or_404(Account, id = user_id)
+            user = get_object_or_404(Account, uuid  = user_id)
             data = json.loads(request.body)
             new_username = data.get('username')
             new_email = data.get('email')
@@ -27,6 +26,9 @@ def UpdateUser(request,user_id):
             new_gender = data.get('gender')
             new_birthday = data.get('birthday')
             new_role = data.get('role')
+            new_type = data.get('type')
+            new_department = data.get('department')
+            new_classroom = data.get('classroom')
             # save
             if new_username:
                 user.username = new_username
@@ -40,6 +42,12 @@ def UpdateUser(request,user_id):
                 user.birthday = new_birthday
             if new_role:
                 user.role = new_role
+            if new_type:
+                    user.type = new_type
+            if new_department:
+                    user.department = new_department
+            if new_classroom:
+                    user.classroom = new_classroom
             user.createdAt = timezone.now()
             user.updateAt = timezone.now()
 
@@ -50,16 +58,18 @@ def UpdateUser(request,user_id):
                     'serviceName': 'USERSERVICE',
                     'body': {
                         'data': {
-                            'message': 'User updated successfully',
-                            'id': user.id,
-                            'name': user.username,
-                            'email': user.email,
-                            'password':user.password,
-                            'gender': user.gender,
-                            'birthday': user.birthday,
-                            'role': user.role,
-                            'createAt': user.createdAt,
-                            'updateAt': user.updateAt
+                        'message': 'User updated successfully',
+                        'id': user.id ,
+                        'name': user.username,
+                        'email': user.email,
+                        'gender': user.gender,
+                        'birthday': user.birthday,
+                        'role': user.role,
+                        'type':user.type,
+                        'department':user.department,
+                        'classroom':user.classroom,
+                        'createAt': user.createdAt,
+                        'updateAt': user.updateAt
                         }
                     }
             }
@@ -123,15 +133,17 @@ def SearchUser(request):
                         'serviceName': 'USERSERVICE',
                         'body': {
                             'data': {
-                                'id': user.id,
+                                'id': user.id ,
                                 'name': user.username,
                                 'email': user.email,
-                                'password':user.password,
                                 'gender': user.gender,
                                 'birthday': user.birthday,
                                 'role': user.role,
+                                'type':user.type,
+                                'department':user.department,
+                                'classroom':user.classroom,
                                 'createAt': user.createdAt,
-                                'updateAt' : user.updateAt
+                                'updateAt': user.updateAt
                             },
                         }
                     }
@@ -167,9 +179,12 @@ def getUser(request):
             gender = data.get('gender')
             birthday = data.get('birthday')
             role = data.get('role')
-            
+            type = data.get('type')
+            department = data.get('department')
+            classroom = data.get('classroom')
+            #type:{}
             # Kiểm tra nếu có dữ liệu bị thiếu
-            if None in [username, password, email, gender, birthday, role]:
+            if None in [username, password, email, gender, birthday, role,type,department, classroom]:
                 response_data = {
                     'status': HTTPStatus.BAD_REQUEST,
                     'mess': 'bad request',
@@ -190,12 +205,15 @@ def getUser(request):
                 'serviceName': 'USERSERVICE',
                 'body': {
                     'data': {
-                        'id': user.id,
+                        'id': user.id ,
                         'name': user.username,
                         'email': user.email,
                         'gender': user.gender,
                         'birthday': user.birthday,
                         'role': user.role,
+                        'type':user.type,
+                        'department':user.department,
+                        'classroom':user.classroom,
                         'createAt': user.createdAt,
                         'updateAt': user.updateAt
                     },
@@ -221,17 +239,3 @@ def getUser(request):
         return JsonResponse({'error': 'Invalid request method'}, status=HTTPStatus.BAD_REQUEST)
     
     
-def getProfile(requests):
-    profile_api ="http://auth-service-api/" # link api profile
-    response = requests.get(profile_api)
-
-    if response.status_code == 200:
-        profile_data = response.json()
-        profile = AccountProfile(userID = profile_data['userID'],userAvt = profile_data['userAvt'], userBackGround = profile_data['userBackGround'])
-        profile.save()
-
-        return JsonResponse({'message' : 'Profile data saved successfully'}, status = 200)
-
-    else:
-        return JsonResponse({'error' : 'Unable to fetch user data from Profile Service'})
-

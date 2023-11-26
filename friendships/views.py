@@ -54,7 +54,7 @@ def Friends_list(request, user_id):
         friend_accounts = friends.friends.all()
     except Friends.DoesNotExist:
         friend_accounts = []
-
+    
     # Xây dựng danh sách bạn bè dưới dạng JSON
     friends_data = [{'id': friend.id, 'name': friend.username} for friend in friend_accounts]
     
