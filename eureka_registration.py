@@ -5,7 +5,7 @@ import json
 eureka_server_url = "https://tdmu-discovery-service.onrender.com/eureka/"
 
 # URL của dịch vụ Django của bạn
-django_service_url = ""
+django_service_url = "https://userservices.onrender.com/"
 
 # Headers cho request POST
 headers = {'Content-Type': 'application/json'}
