@@ -33,4 +33,4 @@ response = requests.post(f"{eureka_server_url}apps/{eureka_payload['instance']['
 if response.status_code == 204:
     print("Đăng ký dịch vụ thành công.")
 else:
-    print(f"Không thể đăng ký dịch vụ . Phản hồi: {response.text}")
+    print(f"Không thể đăng ký dịch vụ. Phản hồi: {response.text}")
