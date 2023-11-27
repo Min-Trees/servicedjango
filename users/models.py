@@ -26,7 +26,7 @@ class Account(models.Model):
         (OTHER , 'OTHER'),
 
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     username = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=200) # service friends
