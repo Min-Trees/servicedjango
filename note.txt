@@ -1,0 +1,92 @@
+// user service
+//CREATE USER
+type CreateUser = {
+    path: "api/v2/user/create";
+    body: {
+        username: string;
+        email: string;
+        password: string; // hash password
+        gender: "MALE" | "FEMALE";
+        birthday: Date;
+        role: "STUDENT" | "TEACHER" | "ADMIN";
+    };
+    response: {
+        id: string;
+        username: string;
+        email: string;
+        avatar?: string;
+        backgroundURL?: string;
+        birthday?: Date;
+        gender: "MALE" | "FEMALE";
+        description?: string;
+        shortDescription?: string;
+        social: {
+            facebook?: string;
+            instagram?: string;
+            twitter?: string;
+        };
+        role: "STUDENT" | "TEACHER" | "ADMIN";
+    };
+};
+
+// GET USER PROFILE
+type GetProfile = {
+    path: "/api/v2/user/profile";
+    params: {
+        id: string;
+    };
+    response: {
+        userId: string;
+        avatar?: string;
+        backgroundURL?: string;
+        school: {
+            name: string | null;
+            faculty: string | null;
+            majors: string | null;
+        };
+        description?: string;
+        gender: string;
+        birtday?: string;
+        shortDescription?: string;
+        socials: {
+            facebook: string | null;
+            twitter: string | null;
+            instagram: string | null;
+        };
+        following: number;
+        follower: number;
+    };
+};
+
+// ADD FRIEND
+type AddFriend = {
+    path: "api/v2/user/friend/new";
+    queries: {
+        id: string;
+    };
+    header: {
+        user: {
+            username: string;
+            email: string;
+            id: string;
+        };
+    };
+    body: {};
+    response: any;
+};
+// GET USER PASWORD
+type GetAuthenticatedUser = {
+    path: "/api/v2/user/authenticated";
+    params: {
+        email: string;
+    };
+    response: {
+        id: string;
+        username: string;
+        email: string;
+        gender: "MALE" | "FEMALE";
+        password: string;
+        role: "STUDENT" | "TEACHER" | "ADMIN";
+        birthday: string;
+    };
+};

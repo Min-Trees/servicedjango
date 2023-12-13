@@ -25,7 +25,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'friendships',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -53,9 +56,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'project_microservice.urls'
+
+CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost//'
 
 TEMPLATES = [
     {
@@ -79,17 +85,21 @@ WSGI_APPLICATION = 'project_microservice.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# settings.py
+
+import os
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',        
-        'USER': 'postgres',            
-        'PASSWORD': 'CC4BB1ggbEd14Dgb-*b3b5cfCff-2GfA', 
-        'HOST': 'monorail.proxy.rlwy.net',  
-        'PORT': '18954',                 
-
+        'NAME': os.environ.get('POSTGRES_DB', 'user-service-db'),      # Tên cơ sở dữ liệu
+        'USER': os.environ.get('POSTGRES_USER', 'user-service'),     # Tên người dùng
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'abc536@#b'),  # Mật khẩu
+        'HOST': os.environ.get('POSTGRES_HOST', 'tdmu-postgres'),    # Tên máy chủ cơ sở dữ liệu
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),             # Cổng kết nối
     }
 }
+
 
 
 '''DATABASES = {
@@ -145,3 +155,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',  # Sử dụng JSONRenderer làm renderer mặc định
     ),
     }
+# myproject/settings.py
+
+ASGI_APPLICATION = 'project_microservice.routing.application'
